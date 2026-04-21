@@ -50,19 +50,8 @@ Neu ban dung SQL Login:
 
 ## 5) Chay ung dung
 
-Mo terminal tai thu muc:
-
-- `ParkingManagementSystem/ParkingManagementSystem`
-
-Chay lan luot:
-
-```bash
-dotnet restore
-dotnet build
-dotnet run
-```
-
-Sau khi chay, mo URL localhost duoc in ra trong terminal.
+Sau khi da mo va setting xong sql hay mo project trong Visual studio roi chay file 'ParkingManagementSystem.sln'
+roi an f5 de chay thu, sau khi hien ra trang chu dang nhap hay nhap tai khoan mau va an dang nhap
 
 ## 6) Tai khoan dang nhap mau
 
