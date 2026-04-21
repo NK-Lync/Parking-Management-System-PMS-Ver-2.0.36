@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using ParkingManagementSystem.Data;
 using ParkingManagementSystem.Models;
+using ParkingManagementSystem.ViewModels;
 using System.Diagnostics;
 
 namespace ParkingManagementSystem.Controllers
@@ -35,6 +36,21 @@ namespace ParkingManagementSystem.Controllers
 
             ViewBag.ChartLabels = stats.Select(x => x.Name).ToList();
             ViewBag.ChartData = stats.Select(x => x.Count).ToList();
+
+            var zoneSummary = await _context.ParkingPositions
+                .GroupBy(p => p.Zone)
+                .Select(g => new ParkingZoneSummaryViewModel
+                {
+                    ZoneName = g.Key,
+                    TotalSlots = g.Count(),
+                    OccupiedSlots = g.Count(x => x.IsOccupied),
+                    MaintenanceSlots = g.Count(x => x.Status != null && x.Status.ToLower() == "maintenance")
+                })
+                .OrderBy(z => z.ZoneName)
+                .ToListAsync();
+
+            ViewBag.TotalZones = zoneSummary.Count;
+            ViewBag.ZoneSummaries = zoneSummary;
 
             // 3. Lấy 5 lượt vào gần nhất để hiển thị ở bảng
             var recentSessions = await _context.ParkingSessions

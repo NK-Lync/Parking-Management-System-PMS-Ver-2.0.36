@@ -770,4 +770,5 @@ C:\Users\ADMIN\Desktop\ParkingManagementSystem1\build_check\ParkingManagementSys
 C:\Users\ADMIN\Desktop\ParkingManagementSystem1\build_check\ParkingManagementSystem.runtimeconfig.json
 C:\Users\ADMIN\Desktop\ParkingManagementSystem1\build_check\ParkingManagementSystem.dll
 C:\Users\ADMIN\Desktop\ParkingManagementSystem1\build_check\ParkingManagementSystem.pdb
+C:\Users\ADMIN\Desktop\ParkingManagementSystem1\ParkingManagementSystem\ParkingManagementSystem\obj\Debug\net8.0\ParkingManagementSystem.sourcelink.json
 C:\Users\ADMIN\Desktop\ParkingManagementSystem1\ParkingManagementSystem\ParkingManagementSystem\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

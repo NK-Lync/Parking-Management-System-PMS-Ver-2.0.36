@@ -156,13 +156,52 @@ namespace ParkingManagementSystem.Controllers
             };
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? keyword, string? status, string? zone)
         {
-            var sessions = await _context.ParkingSessions
+            var query = _context.ParkingSessions
                 .Include(p => p.RFIDCard)
                 .Include(p => p.Vehicle).ThenInclude(v => v.VehicleType)
                 .Include(p => p.ParkingPosition)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(keyword))
+            {
+                var keywordUpper = keyword.Trim().ToUpper();
+                query = query.Where(s =>
+                    (s.LicensePlateIn != null && s.LicensePlateIn.ToUpper().Contains(keywordUpper)) ||
+                    (s.RFIDCard != null && s.RFIDCard.RfidCode.ToUpper().Contains(keywordUpper)) ||
+                    (s.Vehicle != null && s.Vehicle.VehicleType != null && s.Vehicle.VehicleType.TypeName.ToUpper().Contains(keywordUpper)));
+            }
+
+            if (!string.IsNullOrWhiteSpace(status))
+            {
+                if (status.Equals("active", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(s => s.CheckOutTime == null);
+                }
+                else if (status.Equals("completed", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(s => s.CheckOutTime != null);
+                }
+            }
+
+            if (!string.IsNullOrWhiteSpace(zone))
+            {
+                query = query.Where(s => s.ParkingPosition != null && s.ParkingPosition.Zone == zone);
+            }
+
+            var sessions = await query
                 .OrderByDescending(p => p.CheckInTime)
+                .ToListAsync();
+
+            ViewBag.Keyword = keyword ?? string.Empty;
+            ViewBag.SelectedStatus = status ?? string.Empty;
+            ViewBag.SelectedZone = zone ?? string.Empty;
+            ViewBag.ZoneList = await _context.ParkingPositions
+                .Select(p => p.Zone)
+                .Where(z => !string.IsNullOrWhiteSpace(z))
+                .Distinct()
+                .OrderBy(z => z)
                 .ToListAsync();
 
             var overlapMap = sessions
